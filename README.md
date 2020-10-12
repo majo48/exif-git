@@ -1,5 +1,5 @@
 # pyPicDTO
-Set picture DateTimeCreated to Exif DateTime Original
+Set picture file attribute 'DateTimeCreated' to Exif/IPTC/XMP attribute 'DateTimeOriginal' (when the picture was taken with the camera).
 
 # Standards
 JPEG files are the predominant image type in general use today. JPEG is an acronym for “Joint Photographic Experts Group,” which is the name of the committee that created the JPEG standard in 1992. JPEG images use a “lossy” compression format designed to minimize the size of photographs and other realistic image content while retaining the bulk of visual information.
