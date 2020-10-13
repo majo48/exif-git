@@ -1,4 +1,4 @@
-# pyPicDTO
+# recreate-git
 Set picture file attribute 'DateTimeCreated' to EXIF/IPTC/XMP attribute 'DateTimeOriginal' (when the picture was taken with the camera).
 
 # Standards
