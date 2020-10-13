@@ -1,4 +1,4 @@
-import platform, sys
+import sys
 
 def run(inputpath='default', outputpath='default'):
     """ replace file created datetime with original data
