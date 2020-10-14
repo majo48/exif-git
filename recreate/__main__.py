@@ -1,5 +1,11 @@
+""" main part of the recreate app
+
+    functions:
+        defers to app.py together with any command line interface arguments
+"""
 from recreate import app
 import sys
+
 
 if __name__ == '__main__':
     """ handle functional arguments (none, input, input+output)"""

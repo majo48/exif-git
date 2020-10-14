@@ -1,13 +1,25 @@
+""" top-level recreate app
+
+    functions:
+        run(input_path, output_path): defers to gui, scripting packages
+"""
 import sys
 
-def run(inputpath='default', outputpath='default'):
+
+def run(input_path='default', output_path='default'):
     """ replace file created datetime with original data
         arguments:
         none         use defaults for input and output (GUI)
         input        use input path only                 (SCRIPTS)
         input+output use input and output path definitions (SCRIPTS)
     """
-    print({'input': inputpath, 'output': outputpath} )
+    #print({'input': input_path, 'output': output_path})
+    if input_path == 'default' and output_path == 'default':
+        from recreate.gui import app
+        app.run(input_path, output_path)
+    else:
+        from recreate.scripting import app
+        app.run(input_path, output_path)
 
 
 if __name__ == '__main__':

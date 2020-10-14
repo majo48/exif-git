@@ -1,12 +1,18 @@
-import sys, os
+""" scripting part of the recreate app
 
-def run(inputpath, outputpath):
+    functions:
+        run(input_path, output_path): handles scripting interface
+"""
+from recreate.common import constants
+
+
+def run(input_path, output_path):
     """ gui for recreating original creation datetime """
     print('SCRIPTING is active...')
-    print(inputpath)
-    print(outputpath)
+    print(input_path)
+    print(output_path)
+
 
 if __name__ == '__main__':
     """ handle functional arguments """
-    os.path.expanduser('~/documents')
-    run(os.path.expanduser('~/documents'), 'stdout')
+    run(constants.mydocuments(), 'stdout')
