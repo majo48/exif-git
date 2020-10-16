@@ -13,7 +13,6 @@ def run(input_path='default', output_path='default'):
         input        use input path only                 (SCRIPTS)
         input+output use input and output path definitions (SCRIPTS)
     """
-    #print({'input': input_path, 'output': output_path})
     if input_path == 'default' and output_path == 'default':
         from recreate.gui import app
         app.run(input_path, output_path)
