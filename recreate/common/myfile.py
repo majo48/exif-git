@@ -1,5 +1,5 @@
 """ MyFile: set file datetime created to metadata.creation_time """
-import io, sys, os
+import io, sys, os, filetype
 
 
 class MyFile:
@@ -9,22 +9,26 @@ class MyFile:
         """ initialise class variables """
         self.path = file_path
         self.error_msg = None
-        self.has_metadata = False
-        self.is_writeable = False
+        self.mime = self._get_mime(file_path)
+        self.extension = os.path.splitext(file_path)[1].lower()
+        self.info = self._get_exif(file_path)
+        # finished
+
+    def _get_mime(self, file_path):
+        """" get the file minme type """
+        kind = filetype.guess(file_path)
+        if kind is None:
+            self.error_msg = 'Cannot guess file type'
+            return
+        return kind.mime
+
+    def _get_exif(self, file_path):
         # open file
         try:
-            f = io.open( self.path, "wb")
-            self.is_writeable = f.writable()
-            self.extension = os.path.splitext(file_path)[1].lower()
-            self.check_metadata(f)
-            f.close()
+            self.f = io.open( file_path, 'rb')
+            self.bytes = self.f.read(262)
+            self.f.close()
         except:
             self.error_msg = repr(sys.exc_info()[1])
         finally:
-            pass
-        # finish
-        self.info = 'Work in progress...'
-
-    def check_metadata(self, f):
-        """" check the file for metadata """
-        pass
+            return 'Work in progress...'
