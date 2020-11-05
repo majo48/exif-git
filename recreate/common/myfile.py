@@ -1,5 +1,5 @@
 """ MyFile: set file datetime created to metadata.creation_time """
-import io, sys, os, filetype, exifread
+import io, sys, os, filetype, exifread, platform, datetime
 
 HEADERLEN = 262
 
@@ -15,19 +15,51 @@ class MyFile:
         self.mime = self._get_mime(self.bytes)
         self.extension = os.path.splitext(file_path)[1].lower()
         self.tags = self._get_exif_tags(file_path)
+        self.created = self._get_datestring(self._get_creation_floating(file_path))
+        self.originated = None
+        # conditional
+        if self.mime is None:
+            pass
+        elif self.mime == 'image/tiff':
+            pass
+        elif self.mime == 'video/quicktime':
+            pass
+        elif (self.mime == 'image/jpeg') or (self.mime == 'image/png'):
+            if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
+                tag = self.tags['EXIF DateTimeOriginal']
+                self.originated = self._get_iso_time(tag.values)
+        else:
+            pass
         # finish
-        self.output = {'path': self.path, 'mime': self.mime, 'DateTimeOriginal': self._get_iso_time(self.tags['EXIF DateTimeOriginal'])}
+        self.output = {'path': self.path, 'mime': self.mime, 'originated': self.originated, 'created': self.created}
         pass
 
-    def _get_iso_time(self, exif_time):
+    def _get_creation_floating(self, file_path):
+        """ try to get creation date SO#237079 """
+        if platform.system() == 'Windows':
+            return os.path.getctime(file_path)
+        else:
+            stat = os.stat(file_path)
+            try:
+                return stat.st_birthtime
+            except AttributeError:
+                # We're probably on Linux. No easy way to get creation dates here,
+                # so we'll settle for when its content was last modified.
+                return stat.st_mtime
+
+    def _get_datestring(self, floatingnumber):
+        """ convert floating date to ISO 8601 string """
+        t = datetime.datetime.fromtimestamp(floatingnumber)
+        return t.strftime('%Y-%m-%dT%H:%M:%S')
+
+    def _get_iso_time(self, timestring):
         """ get (convert) to ISO 8601 time format """
-        xtime = exif_time.values
-        year = xtime[0:4]
-        month = xtime[5:7]
-        day = xtime[8:10]
-        hour = xtime[11:13]
-        minute = xtime[14:16]
-        second = xtime[17:19]
+        year = timestring[0:4]
+        month = timestring[5:7]
+        day = timestring[8:10]
+        hour = timestring[11:13]
+        minute = timestring[14:16]
+        second = timestring[17:19]
         return year+'-'+month+'-'+day+'T'+hour+':'+minute+':'+second
 
     def _get_exif_tags(self, file_path):
@@ -58,7 +90,5 @@ class MyFile:
         """" get the file mime type """
         kind = filetype.guess(inp)
         if kind is None:
-            self.error = {'path': self.path, 'error': 'Cannot guess file type'}
             return None
         return kind.mime
-

@@ -18,7 +18,7 @@ def run(input_path, output_path):
             for myfile in myf.files:
                 if myfile.error is not None:
                     print(myfile.error)
-                else:
+                elif myfile.mime is not None:
                     print(myfile.output)
     else:
         try:
@@ -26,7 +26,7 @@ def run(input_path, output_path):
             for myfile in myf.files:
                 if myfile.error is not None:
                     f.write(str(myfile.error)+"\n")
-                else:
+                elif myfile.mime is not None:
                     f.write(str(myfile.output)+"\n")
             f.close()
             print('Wrote', len(myf.files), 'lines to', output_path)
