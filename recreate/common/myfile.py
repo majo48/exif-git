@@ -5,6 +5,8 @@ import io, sys, os, filetype, exifread, platform, datetime
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 
+from PIL.PngImagePlugin import PngImageFile, PngInfo
+
 HEADERLEN = 262
 
 
@@ -28,7 +30,7 @@ class MyFile:
         elif self.mime == 'image/tiff':
             pass
 
-        elif (self.mime == 'image/jpeg') or (self.mime == 'image/png'):
+        elif self.mime == 'image/jpeg':
             if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
                 tag = self.tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
@@ -38,6 +40,9 @@ class MyFile:
                 tag = self.tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
 
+        elif self.mime == 'image/png':
+            self.originated = self._get_EXIF_DateTimeOriginal(self.path)
+
         elif self.mime == 'video/quicktime':
             self.originated = self._get_recording_datetime(self.path)
 
@@ -46,6 +51,30 @@ class MyFile:
         # finish
         self.output = {'path': self.path, 'mime': self.mime, 'recorded': self.originated, 'created': self.created}
         pass
+
+    def _get_EXIF_DateTimeOriginal(self, file_path):
+        """ try to get the recording date from the EXIF in PNG file """
+        try:
+            image = PngImageFile(file_path)
+            metadata = PngInfo()
+            exif_array = []
+            for i in image.text:
+                compile = i, str(image.text[i])
+                exif_array.append(compile)
+            if len(exif_array) > 0:
+                header = exif_array[0][0]
+                if header.startswith("XML"):
+                    xml = exif_array[0][1]
+                    for line in xml.splitlines():
+                        if 'DateCreated' in line:
+                            idx1 = line.find('>')
+                            idx2 = line.rfind('<')
+                            if (idx1 != -1) and (idx2 != -1):
+                                dt = line[idx1+1:idx2]
+                                return dt
+        except Exception as err:
+            pass # returns None
+        return None
 
     def _get_recording_datetime(self, file_path):
         """ try to get the recording date from the QuickTime file """
