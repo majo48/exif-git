@@ -1,6 +1,10 @@
 """ MyFile: set file datetime created to metadata.creation_time """
 import io, sys, os, filetype, exifread, platform, datetime
 
+# See https://hachoir.readthedocs.io/en/latest/developer.html
+from hachoir.parser import createParser
+from hachoir.metadata import extractMetadata
+
 HEADERLEN = 262
 
 
@@ -35,13 +39,24 @@ class MyFile:
                 self.originated = self._get_iso_time(tag.values)
 
         elif self.mime == 'video/quicktime':
-            pass
+            self.originated = self._get_recording_datetime(self.path)
 
         else:
             pass
         # finish
-        self.output = {'path': self.path, 'mime': self.mime, 'originated': self.originated, 'created': self.created}
+        self.output = {'path': self.path, 'mime': self.mime, 'recorded': self.originated, 'created': self.created}
         pass
+
+    def _get_recording_datetime(self, file_path):
+        """ try to get the recording date from the QuickTime file """
+        parser = createParser(self.path)
+        with parser:
+            try:
+                metadata = extractMetadata(parser).get('creation_date')
+                return metadata.strftime('%Y-%m-%dT%H:%M:%S')
+            except Exception as err:
+                # print("Metadata extraction error: %s" % err)
+                return None
 
     def _get_creation_floating(self, file_path):
         """ try to get creation date SO#237079 """

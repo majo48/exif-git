@@ -8,6 +8,7 @@ This application is built and tested with the following dependencies:
 
 - filetype (1.0.7): library, port from Go package
 - ExifRead (2.3.2): library for reading EXIF metadata
+- hachoir (3.1.2):  library for reading QuickTime metadata
 - and other sub-dependants activated by pyCharm
 
 Developed with:
