@@ -2,11 +2,14 @@
 
 This application is built and tested with the following dependencies:
 
-- python (3.8): programming language
+- python (3.9): programming language
+- pip (21.2.4): package installer for Python
+- setuptools (57.4.0): tool for packaging Python projects
+
 - filetype (1.0.7): library, port from Go package
-- pip (20.2.3): package installer for Python
-- setuptools (49.2.1): tool for packaging Python projects
+- ExifRead (2.3.2): library for reading EXIF metadata
+- and other sub-dependants activated by pyCharm
 
 Developed with:
 
-- pycharm (2019.3): the Python IDE for Professional Developers
+- pyCharm CE (2021.2): the Python IDE community edition

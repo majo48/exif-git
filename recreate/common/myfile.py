@@ -20,14 +20,23 @@ class MyFile:
         # conditional
         if self.mime is None:
             pass
+
         elif self.mime == 'image/tiff':
             pass
-        elif self.mime == 'video/quicktime':
-            pass
+
         elif (self.mime == 'image/jpeg') or (self.mime == 'image/png'):
             if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
                 tag = self.tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
+
+        elif self.mime == 'image/heic':
+            if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
+                tag = self.tags['EXIF DateTimeOriginal']
+                self.originated = self._get_iso_time(tag.values)
+
+        elif self.mime == 'video/quicktime':
+            pass
+
         else:
             pass
         # finish
