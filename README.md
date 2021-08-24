@@ -1,5 +1,5 @@
 # recreate-git
-Set picture file attribute 'DateTimeCreated' to EXIF/IPTC/XMP attribute 'DateTimeOriginal' (when the picture was taken with the camera).
+Set picture file attribute 'DateTimeCreated' to EXIF/IPTC/XMP attribute 'DateTimeOriginal' (when the picture was taken with the camera). This script runs on MacOS computers.
 
 # input/output parameters
 The application can be called (runs) with or without arguments.

@@ -14,7 +14,10 @@ CHANGE_FILENAME = False
 
 
 class MyFile:
-    """ Heavy lifting part of the recreate application """
+    """
+        Heavy lifting part of the recreate application.
+        For one file only, see iteration in app.
+    """
 
     def __init__(self, file_path):
         """ initialise class variables """
@@ -25,31 +28,49 @@ class MyFile:
         self.extension = os.path.splitext(file_path)[1].lower()
         self.tags = self._get_exif_tags(file_path)
         self.created = self._get_datestring(self._get_creation_floating(file_path))
+
+        # set self.originated conditionally
         self.originated = None
+        self._set_self_originated(self.mime, self.path, self.tags)
 
-        # conditional
-        if self.mime is None:
+        # set output file attributes
+        self.outfile = self._update_file_attributes(self.path, self.originated)
+        self.output = {
+            'mime': self.mime, 'recorded': self.originated, 'created': self.created, 'outfile': self.outfile
+        }
+        pass
+
+    def _update_file_attributes(self, file_path, recorded):
+        """ set the file attributes (filename, creation_date) accordingly """
+        if CHANGE_TIMESTAMP:
+            # todo: add code here
+            return file_path
+
+        if CHANGE_FILENAME:
+            # todo: add code here
+            return 'xfile-'+'yyy-mm-ddThhmmss-'+'...'
+
+        if CHANGE_FILENAME == False and CHANGE_TIMESTAMP == False:
+            return file_path
+
+    def _set_self_originated(self, mime, file_path, tags):
+        """ set (conditionally) the original timestamp from file metadata """
+        if mime is None:
             pass
 
-        elif self.mime == 'image/tiff':
+        elif mime == 'image/tiff':
             pass
 
-        elif (self.mime == 'image/jpeg') or (self.mime == 'image/heic'):
-            if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
-                tag = self.tags['EXIF DateTimeOriginal']
+        elif (mime == 'image/jpeg') or (mime == 'image/heic'):
+            if (tags is not None) and ('EXIF DateTimeOriginal' in tags):
+                tag = tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
 
-        elif self.mime == 'image/png':
-            self.originated = self._get_EXIF_DateTimeOriginal(self.path)
+        elif mime == 'image/png':
+            self.originated = self._get_EXIF_DateTimeOriginal(file_path)
 
-        elif self.mime == 'video/quicktime':
-            self.originated = self._get_recording_datetime(self.path)
-
-        else:
-            pass
-        # finish
-        self.output = {'path': self.path, 'mime': self.mime, 'recorded': self.originated, 'created': self.created}
-        pass
+        elif mime == 'video/quicktime':
+            self.originated = self._get_recording_datetime(file_path)
 
     def _get_EXIF_DateTimeOriginal(self, file_path):
         """ try to get the recording date from the EXIF in PNG file """
