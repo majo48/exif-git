@@ -4,10 +4,13 @@ import io, sys, os, filetype, exifread, platform, datetime
 # See https://hachoir.readthedocs.io/en/latest/developer.html
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
-
+# See https://pillow.readthedocs.io/en/stable/
 from PIL.PngImagePlugin import PngImageFile, PngInfo
 
-HEADERLEN = 262
+# Constants
+HEADER_LEN = 262
+CHANGE_TIMESTAMP = False
+CHANGE_FILENAME = False
 
 
 class MyFile:
@@ -23,6 +26,7 @@ class MyFile:
         self.tags = self._get_exif_tags(file_path)
         self.created = self._get_datestring(self._get_creation_floating(file_path))
         self.originated = None
+
         # conditional
         if self.mime is None:
             pass
@@ -30,12 +34,7 @@ class MyFile:
         elif self.mime == 'image/tiff':
             pass
 
-        elif self.mime == 'image/jpeg':
-            if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
-                tag = self.tags['EXIF DateTimeOriginal']
-                self.originated = self._get_iso_time(tag.values)
-
-        elif self.mime == 'image/heic':
+        elif (self.mime == 'image/jpeg') or (self.mime == 'image/heic'):
             if (self.tags is not None) and ('EXIF DateTimeOriginal' in self.tags):
                 tag = self.tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
@@ -132,7 +131,7 @@ class MyFile:
         header_bytes = None
         try:
             f = io.open( file_path, 'rb')
-            header_bytes = f.read(HEADERLEN)
+            header_bytes = f.read(HEADER_LEN)
             f.close()
         except IOError:
             self.error = {'path': file_path, 'error': repr(sys.exc_info()[1])}

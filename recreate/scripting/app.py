@@ -15,19 +15,23 @@ def run(input_path, output_path):
         if myf.error is not None:
             print({'path': input_path, 'error': myf.error})
         else:
+            print('[')
             for myfile in myf.files:
                 if myfile.error is not None:
                     print(myfile.error)
                 elif myfile.mime is not None:
                     print(myfile.output)
+            print(']')
     else:
         try:
             f = io.open( output_path, "w", encoding="utf-8")
+            f.write('['+"\n")
             for myfile in myf.files:
                 if myfile.error is not None:
                     f.write(str(myfile.error)+"\n")
                 elif myfile.mime is not None:
                     f.write(str(myfile.output)+"\n")
+            f.write(']' + "\n")
             f.close()
             print('Wrote', len(myf.files), 'lines to', output_path)
         except IOError:
