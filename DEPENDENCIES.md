@@ -8,9 +8,13 @@ This application is built and tested with the following dependencies:
 
 - filetype (1.0.7): library, port from Go package
 - ExifRead (2.3.2): library for reading EXIF metadata
-- hachoir (3.1.2):  library for reading QuickTime metadata
-- Pillow (8.3.1):   librray for reading PNG metadata
 - and other sub-dependants activated by pyCharm
+
+Please note: 
+
+The following packages are installed OUTSIDE of the pyCharm virtual environment, using their published installation methodes:
+- hachoir (3.1.2):  library for reading QuickTime metadata
+- Pillow (8.3.1):   library for reading PNG metadata
 
 Developed with:
 
