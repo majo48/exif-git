@@ -2,6 +2,7 @@
     Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
 """
 import sys
+from recreate.scripting import app
 
 
 def run(input_path='default', output_path='default'):
@@ -10,7 +11,6 @@ def run(input_path='default', output_path='default'):
         input        use input path only                 (SCRIPTS)
         input+output use input and output path definitions (SCRIPTS)
     """
-    from recreate.scripting import app
     app.run(input_path, output_path)
 
 def manage_arguments():
