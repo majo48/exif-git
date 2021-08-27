@@ -1,5 +1,16 @@
-""" MyFile: set file datetime created to metadata.creation_time """
-import io, sys, os, filetype, exifread, platform, datetime, shutil
+""" Class MyFile:
+    set file datetime created to metadata.creation_time
+    Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
+"""
+import io
+import sys
+import os
+import filetype
+import exifread
+import platform
+import datetime
+import shutil
+import hachoir
 
 # See https://hachoir.readthedocs.io/en/latest/developer.html
 from hachoir.parser import createParser
@@ -9,7 +20,6 @@ from PIL.PngImagePlugin import PngImageFile, PngInfo
 
 # Constants
 HEADER_LEN = 262
-CHANGE_TIMESTAMP = False
 CHANGE_FILENAME = True
 LEAD_IN = 'xfile_'
 
@@ -36,31 +46,28 @@ class MyFile:
             self._set_self_originated(self.mime, self.path, self.tags)
 
             # set output file attributes
-            self.outfile = self._update_file_attributes(self.path, self.originated)
+            self.outfile = self._update_file_attribute(self.path, self.originated)
             self.output = {
-            'mime': self.mime, 'recorded': self.originated, 'created': self.created, 'outfile': self.outfile
+                'mime': self.mime, 'recorded': self.originated, 'created': self.created, 'outfile': self.outfile
             }
         else:
             # for non-mime types
             self.output = None
 
-    def _update_file_attributes(self, file_path, recorded):
-        """ set the file attributes (filename, creation_date) accordingly """
+    def _update_file_attribute(self, file_path, recorded):
+        """ set the file attributes (filename) conditionally """
         outfile = file_path # same as input file
         if CHANGE_FILENAME and (LEAD_IN not in outfile):
             # build new output filename
-            extension = os.path.splitext(outfile)
             basename = os.path.basename(outfile)
             dirname = os.path.dirname(outfile)
-            sortpart = LEAD_IN+recorded.replace(':', '_').replace('-', '_')
+            if recorded is not None:
+                sortpart = LEAD_IN + recorded.replace(':', '_').replace('-', '_')
+            else:
+                sortpart = LEAD_IN + '1970_01_01T00_00_00'
             outfile = dirname+'/'+sortpart+'_'+basename
             # make a copy of the media file (data and file permissions)
             shutil.copy(file_path, outfile)
-
-        if CHANGE_TIMESTAMP:
-            pass
-            # todo: add code here to change creation_date for outfile
-
         return outfile
 
     def _set_self_originated(self, mime, file_path, tags):

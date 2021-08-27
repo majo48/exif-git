@@ -1,5 +1,10 @@
-""" MyFolder: set file datetime created to metadata.creation_time in all files in folder """
-import io, sys, os
+""" Class MyFolder:
+    set file datetime created to metadata.creation_time in all files in folder
+    Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
+"""
+import io
+import sys
+import os
 from recreate.common import myfile
 
 
