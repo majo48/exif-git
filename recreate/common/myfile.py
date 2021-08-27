@@ -11,6 +11,7 @@ import platform
 import datetime
 import shutil
 import hachoir
+import PIL
 
 # See https://hachoir.readthedocs.io/en/latest/developer.html
 from hachoir.parser import createParser
