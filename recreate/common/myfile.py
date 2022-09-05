@@ -69,6 +69,8 @@ class MyFile:
             outfile = dirname+'/'+sortpart+'_'+basename
             # make a copy of the media file (data and file permissions)
             shutil.copy(file_path, outfile)
+            # delete the input file
+            os.remove(file_path)
         return outfile
 
     def _set_self_originated(self, mime, file_path, tags):
