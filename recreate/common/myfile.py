@@ -10,8 +10,8 @@ import exifread
 import platform
 import datetime
 import shutil
-import hachoir
-import PIL
+import subprocess
+
 
 # See https://hachoir.readthedocs.io/en/latest/developer.html
 from hachoir.parser import createParser
@@ -21,9 +21,8 @@ from PIL.PngImagePlugin import PngImageFile, PngInfo
 
 # Constants
 HEADER_LEN = 262
-CHANGE_FILENAME = True
 LEAD_IN = 'xfile_'
-
+TESTMODE = False
 
 class MyFile:
     """
@@ -47,18 +46,21 @@ class MyFile:
             self._set_self_originated(self.mime, self.path, self.tags)
 
             # set output file attributes
-            self.outfile = self._update_file_attribute(self.path, self.originated)
+            self.outfile = self._update_file(self.path, self.originated)
             self.output = {
-                'mime': self.mime, 'recorded': self.originated, 'created': self.created, 'outfile': self.outfile
+                'mime': self.mime,
+                'recorded': self.originated,
+                'created': self.created,
+                'outfile': self.outfile
             }
         else:
             # for non-mime types
             self.output = None
 
-    def _update_file_attribute(self, file_path, recorded):
-        """ set the file attributes (filename) conditionally """
+    def _update_file(self, file_path, recorded):
+        """ set the filename to xfile_yyyy_mm_dd etc. conditionally """
         outfile = file_path # same as input file
-        if CHANGE_FILENAME and (LEAD_IN not in outfile):
+        if LEAD_IN not in outfile:
             # build new output filename
             basename = os.path.basename(outfile)
             dirname = os.path.dirname(outfile)
@@ -70,27 +72,43 @@ class MyFile:
             # make a copy of the media file (data and file permissions)
             shutil.copy(file_path, outfile)
             # delete the input file
-            os.remove(file_path)
+            if not TESTMODE:
+                os.remove(file_path)
         return outfile
 
     def _set_self_originated(self, mime, file_path, tags):
         """ set (conditionally) the original timestamp from file metadata """
-        if mime is None:
-            pass
-
-        elif mime == 'image/tiff':
-            pass
-
-        elif (mime == 'image/jpeg') or (mime == 'image/heic'):
+        if mime == 'image/jpeg':
             if (tags is not None) and ('EXIF DateTimeOriginal' in tags):
                 tag = tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
+            else:
+                self.originated = None
+
+        elif mime == 'image/heic':
+            self.originated = self._get_shell_exif(file_path)
 
         elif mime == 'image/png':
             self.originated = self._get_EXIF_DateTimeOriginal(file_path)
 
         elif mime == 'video/quicktime':
             self.originated = self._get_recording_datetime(file_path)
+        else:
+            self.originated = None
+
+    def _get_shell_exif(self, file_path):
+        """ get the recording date for HEIC files using shell """
+        if platform.system() == 'Darwin':
+            cmd = "mdls '%s'" % file_path
+            output = subprocess.check_output(cmd, shell = True)
+            lines = output.decode("ascii").split("\n")
+            for line in lines:
+                if "kMDItemContentCreationDate" in line:
+                    datetime_str = line.split('= ')[1] # format: 2021-07-14 08:54:03 +0000
+                    datetime_arr = datetime_str.split(' ')
+                    return datetime_arr[0]+'T'+datetime_arr[1]
+            return None
+        return None
 
     def _get_EXIF_DateTimeOriginal(self, file_path):
         """ try to get the recording date from the EXIF in PNG file """
@@ -156,7 +174,10 @@ class MyFile:
         return year+'-'+month+'-'+day+'T'+hour+':'+minute+':'+second
 
     def _get_exif_tags(self, file_path):
-        """ open file, read exif meta data """
+        """
+            open file, read exif meta data
+            Note: currently doesn't work for image/heic (Sep 2023)
+        """
         tags = None
         try:
             f = io.open( file_path, 'rb')
