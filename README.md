@@ -3,22 +3,28 @@ Enable stable sorting of pictures and videoclips, based upon the date time when 
 
 Method: Add the EXIF/IPTC/XMP attribute 'DateTimeOriginal' to the filename of the media file. 
 
-This script runs on MacOS computers.
+This script runs on MacOS and/or Windows computers.
 
 # input/output parameters
 The application can be called (runs) with or without arguments.
 
 Set script directory:
 
-`$ cd <path to recreate-git>`
+`macos$ cd <path to recreate-git>`
+
+`winos> cd <path to recreate-git>`
 
 Start an interactive GUI session:
 
-`$ python3 -m recreate` 
-    
+`macos$ python3 -m recreate`
+
+`winos> python -m recreate` 
+ 
 Start a SCRIPT session:
 
-`$ python3 -m recreate <input path> <output path>` 
+`macos$ python3 -m recreate <input path> <output path>`
+
+`winos> python -m recreate <input path> <output path>` 
 
     <input path> variants:
       file, conditionaly sets file-datetime-created in one file
