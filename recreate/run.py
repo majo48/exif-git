@@ -1,6 +1,8 @@
 """ run the app with predefined arguments """
 from recreate import app
 
+# macos files:
+
 # app.run('/Users/mart/projects/recreate-git/tests/img_1771.jpg')
 # app.run('/Users/mart/projects/recreate-git/tests/IMG_6349.PNG')
 # app.run('/Users/mart/projects/recreate-git/tests/IMG_6413.HEIC')
@@ -14,4 +16,7 @@ from recreate import app
 # app.run('/Users/mart/desktop/velotour2021/mart', '/Users/mart/desktop/output.txt')
 # app.run('/Users/mart/desktop/velotour2021/roos', '/Users/mart/desktop/output.txt')
 
-app.run('C:\\Users\\mart\\Desktop\\ROM2024\\MartiCloudFotos', 'c:\\Users\\mart\\desktop\\ROM2024\\output.txt')
+# Windows files:
+
+# app.run('C:\\Users\\mart\\Desktop\\ROM2024\\MartiCloudFotos', 'c:\\Users\\mart\\desktop\\ROM2024\\output.txt')
+app.run('C:\\Users\\mart\\Desktop\\ROM2024\\RoosiCloudFotos', 'c:\\Users\\mart\\desktop\\ROM2024\\output.txt')

@@ -6,6 +6,7 @@ import io
 import sys
 import os
 from recreate.common import myfile
+import logging
 
 
 class MyFolder:
@@ -15,6 +16,9 @@ class MyFolder:
         """ Init class variables """
         self.files = []
         self.error = None
+        """ init logging level """
+        logging.basicConfig(level=logging.ERROR) # due to annoying ExifRead messages
+        """ loop through all files (in folder) """
         if os.path.isfile(file_path):
             self.files.append(myfile.MyFile(file_path))
         elif os.path.isdir(file_path):

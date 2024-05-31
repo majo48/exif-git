@@ -18,7 +18,7 @@ from PIL.PngImagePlugin import PngImageFile, PngInfo
 # Constants
 HEADER_LEN = 262
 LEAD_IN = 'xfile_'
-TESTMODE = True   # False removes the original file, True keeps it
+TESTMODE = False   # False removes the original file, True keeps it
 
 class MyFile:
     """
