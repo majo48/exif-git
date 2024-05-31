@@ -11,18 +11,14 @@ import platform
 import datetime
 import shutil
 import subprocess
-
-
-# See https://hachoir.readthedocs.io/en/latest/developer.html
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
-# See https://pillow.readthedocs.io/en/stable/
 from PIL.PngImagePlugin import PngImageFile, PngInfo
 
 # Constants
 HEADER_LEN = 262
 LEAD_IN = 'xfile_'
-TESTMODE = False
+TESTMODE = True   # False removes the original file, True keeps it
 
 class MyFile:
     """
@@ -83,7 +79,7 @@ class MyFile:
                 tag = tags['EXIF DateTimeOriginal']
                 self.originated = self._get_iso_time(tag.values)
             else:
-                self.originated = None
+                self.originated = self.created
 
         elif mime == 'image/heic':
             self.originated = self._get_shell_exif(file_path)
@@ -93,8 +89,11 @@ class MyFile:
 
         elif mime == 'video/quicktime':
             self.originated = self._get_recording_datetime(file_path)
+        elif mime == 'video/mp4':
+            self.originated = self.created
         else:
             self.originated = None
+
 
     def _get_shell_exif(self, file_path):
         """ get the recording date for HEIC files using shell """
