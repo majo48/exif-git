@@ -18,5 +18,5 @@ from recreate import app
 
 # Windows files:
 
-# app.run('C:\\Users\\mart\\Desktop\\ROM2024\\MartiCloudFotos', 'c:\\Users\\mart\\desktop\\ROM2024\\output.txt')
-app.run('C:\\Users\\mart\\Desktop\\ROM2024\\RoosiCloudFotos', 'c:\\Users\\mart\\desktop\\ROM2024\\output.txt')
+app.run('C:\\Users\\mart\\Desktop\\RHEIN2024\\mart\\allpics', 'c:\\Users\\mart\\desktop\\RHEIN2024\\mart\\output.txt')
+# app.run('C:\\Users\\mart\\Desktop\\RHEIN2024\\roos\\allpics', 'c:\\Users\\mart\\desktop\\RHEIN2024\\roos\\output.txt')

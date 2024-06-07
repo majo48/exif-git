@@ -31,6 +31,9 @@ def run(input_path, output_path):
                     f.write(str(myfile.error)+"\n")
                 elif myfile.mime is not None:
                     f.write(str(myfile.output)+"\n")
+                else:
+                    f.write(str("error in "+myfile.path)+"\n")
+                    break  # escape for loop
             f.write(']' + "\n")
             f.close()
             print('Wrote', len(myf.files), 'lines to', output_path)
