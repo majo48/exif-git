@@ -1,16 +1,16 @@
 """ Class MyFolder:
     set file datetime created to metadata.creation_time in all files in folder
-    Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
+    Copyright (c) 2021 Martin Jonasse
 """
 import io
 import sys
 import os
-from recreate.common import myfile
+from rename.common import myfile
 import logging
 
 
 class MyFolder:
-    """ Recursive part of the recreate application """
+    """ Recursive part of the rename application """
 
     def __init__(self, file_path):
         """ Init class variables """

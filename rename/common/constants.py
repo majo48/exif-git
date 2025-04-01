@@ -1,4 +1,4 @@
-""" common part of the recreate app
+""" common part of the rename app
 
     functions:
         mydocuments(): the fully qualified path to the MyDocuments folder

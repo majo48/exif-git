@@ -2,7 +2,7 @@
 
 This application is built and tested with the following dependencies:
 
-- python (3.9): programming language
+- python (3.13): programming language
 - pip (24.1b1): package installer for Python
 - setuptools (70.0.0): tool for packaging Python projects
 - filetype (1.2.1): library, port from Go package
@@ -13,4 +13,4 @@ This application is built and tested with the following dependencies:
 
 Developed with:
 
-- pyCharm CE (2024.1.2): the Python IDE community edition
+- pyCharm CE (2024.3.1.1): the Python IDE community edition

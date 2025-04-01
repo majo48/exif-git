@@ -1,9 +1,9 @@
-""" scripting part of the recreate app
+""" scripting part of the rename app
 
     functions:
         run(input_path, output_path): handles scripting interface
 """
-from recreate.common import constants, myfolder
+from rename.common import constants, myfolder
 import io, sys
 
 

@@ -1,14 +1,14 @@
 """ run the app with predefined arguments """
-from recreate import app
+from rename import app
 
 # macos files:
 
-# app.run('/Users/mart/projects/recreate-git/tests/img_1771.jpg')
-# app.run('/Users/mart/projects/recreate-git/tests/IMG_6349.PNG')
-# app.run('/Users/mart/projects/recreate-git/tests/IMG_6413.HEIC')
-# app.run('/Users/mart/projects/recreate-git/tests/IMG_6512.MOV')
+# app.run('/Users/mart/projects/rename-git/tests/img_1771.jpg')
+# app.run('/Users/mart/projects/rename-git/tests/IMG_6349.PNG')
+# app.run('/Users/mart/projects/rename-git/tests/IMG_6413.HEIC')
+# app.run('/Users/mart/projects/rename-git/tests/IMG_6512.MOV')
 
-# app.run('/Users/mart/projects/recreate-git/tests', '/Users/mart/desktop/output.txt')
+# app.run('/Users/mart/projects/rename-git/tests', '/Users/mart/desktop/output.txt')
 # app.run('/Users/mart/Desktop/velotour2021/roos')
 # app.run('/Users/mart/Desktop/martin', '/Users/mart/Desktop/martout.txt')
 # app.run('/Users/mart/Desktop/roosin', '/Users/mart/Desktop/roosout.txt')

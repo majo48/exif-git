@@ -1,30 +1,42 @@
-# recreate-git
-Enable stable sorting of pictures and videoclips, based upon the date time when the picture was taken with the camera. 
+# exif-git (repository)
+Manage files downloaded from iCloud (Original format). These files contain EXIF information from the iPhones used to make pictures and videoclips.
+This EXIF information is not easily accessed using the Mac Finder application. 
+
+Thus the need for this repository with some DIY apps.
+
+# purge (package)
+
+The pictures and video-clips stored in iCloud are also backed up to a NAS. This NAS has a given capacity which is compromised by the huge movies made by myself, my wife and other contributors thru Whatsapp Signal etc.
+
+Thus the need for the purge (package), which removes large video-clips from the NAS.
+
+# rename (package)
+Enable stable sorting of pictures and video-clips, based upon the date time when the picture was taken with the camera. 
 
 Method: Add the EXIF/IPTC/XMP attribute 'DateTimeOriginal' to the filename of the media file. 
 
-This script runs on MacOS and/or Windows computers.
+This script runs on macOS and/or Windows computers.
 
-# input/output parameters
+## input/output parameters
 The application can be called (runs) with or without arguments.
 
 Set script directory:
 
-`macos$ cd <path to recreate-git>`
+`macos$ cd <path to rename-git>`
 
-`winos> cd <path to recreate-git>`
+`winos> cd <path to rename-git>`
 
 Start an interactive GUI session:
 
-`macos$ python3 -m recreate`
+`macos$ python3 -m rename`
 
-`winos> python -m recreate` 
+`winos> python -m rename` 
  
 Start a SCRIPT session:
 
-`macos$ python3 -m recreate <input path> <output path>`
+`macos$ python3 -m rename <input path> <output path>`
 
-`winos> python -m recreate <input path> <output path>` 
+`winos> python -m rename <input path> <output path>` 
 
     <input path> variants:
       file, conditionaly sets file-datetime-created in one file
@@ -34,7 +46,7 @@ Start a SCRIPT session:
       <stdout>, logs to terminal output
       file, logs (appends) to a text file
 
-# applicable standards
+## applicable standards
 JPEG files are the predominant image type in general use today. JPEG is an acronym for “Joint Photographic Experts Group,” which is the name of the committee that created the JPEG standard in 1992. JPEG images use a “lossy” compression format designed to minimize the size of photographs and other realistic image content while retaining the bulk of visual information.
 
 JPEG image files can be rich with metadata. The “JPEG File Interchange Format (JFIF)” extended the JPEG format to include a minimal amount of metadata, including pixel density and aspect ratio, and optionally a small embedded thumbnail of the image to be used by gallery display applications.

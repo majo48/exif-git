@@ -1,8 +1,8 @@
-""" top-level recreate script
-    Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
+""" top-level rename script
+    Copyright (c) 2021 Martin Jonasse
 """
 import sys
-from recreate.scripting import app
+from rename.scripting import app
 
 
 def run(input_path='default', output_path='default'):

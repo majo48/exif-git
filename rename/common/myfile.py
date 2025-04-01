@@ -1,6 +1,6 @@
 """ Class MyFile:
     set file datetime created to metadata.creation_time
-    Copyright (c) 2021 M. Jonasse (martin.jonasse@mail.ch)
+    Copyright (c) 2021 Martin Jonasse
 """
 import io
 import sys
@@ -22,7 +22,7 @@ TESTMODE = False   # False removes the original file, True keeps it
 
 class MyFile:
     """
-        Heavy lifting part of the recreate application.
+        Heavy lifting part of the rename application.
         For one file only, see iteration in app.
     """
 
