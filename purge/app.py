@@ -32,8 +32,8 @@ def get_movie_duration(file_path):
         f = io.open(file_path, 'rb')
         tags = exifread.process_file(f)
         f.close()
-    else:
-        return "" # not a movie
+        pass
+    return 0 # not a movie
 
 def is_software_image(file_path):
     """
