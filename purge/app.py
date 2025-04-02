@@ -6,13 +6,46 @@
 """
 # packages ====
 import os
-from pprint import pprint
+import io
+import exifread
 
 # constants ====
 MAX_SIZE = 70 * 1024 * 1024 # 70 MBytes
+IMAGE_EXTENSIONS = [ ".pkg", ".ova", ".dmg", ".iso", ".exe" ]
+MOVIE_EXTENSIONS = [ ".mp2", ".MP2", ".mp4", ".MP4", ".mov", ".MOV", ".mpg", ".MPG"]
 FOLDERS = [
-    "/volumes/myArchive/MyDocuments"
+    "/volumes/myArchive/Bilder"
 ]
+
+def is_movie(file_path):
+    """
+        check if the file_path represents a movie
+    """
+    filename, file_extension = os.path.splitext(file_path)
+    return file_extension in MOVIE_EXTENSIONS
+
+def get_movie_duration(file_path):
+    """
+        get the duration of the movie in seconds
+    """
+    if is_movie(file_path):
+        f = io.open(file_path, 'rb')
+        tags = exifread.process_file(f)
+        f.close()
+    else:
+        return "" # not a movie
+
+def is_software_image(file_path):
+    """
+        check if the file_path contains a software image extension
+    """
+    filename, file_extension = os.path.splitext(file_path)
+    if file_extension in IMAGE_EXTENSIONS:
+        return True
+    elif (file_extension == ".zip") and ("vmware" in filename):
+        return True
+    else:
+        return False
 
 def get_candidates(folders):
     """ get a list with filenames and path """
@@ -45,9 +78,21 @@ def get_candidates(folders):
 def run():
     """ main code """
     candidates, total_size = get_candidates(FOLDERS)
-    print("List of candidates:")
-    pprint(candidates)
+
     print("Total size:", round(total_size,1), "MBytes")
+
+    print("List of candidates:")
+    for candidate in candidates:
+        print(str(candidate[1]), "MBytes", candidate[0])
+
+    image_size = 0.0
+    print("List of Software Images:")
+    for candidate in candidates:
+        if is_software_image(candidate[0]):
+            image_size += candidate[1]
+            print(str(candidate[1]), "MBytes", candidate[0])
+        pass
+    print("Images size:", round(image_size, 1), "MBytes")
 
 if __name__ == '__main__':
     run()
