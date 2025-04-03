@@ -6,16 +6,18 @@
 """
 # packages ====
 import os
-import io
-import exifread
+from hachoir.parser import createParser
+from hachoir.metadata import extractMetadata
 
 # constants ====
 MAX_SIZE = 70 * 1024 * 1024 # 70 MBytes
 IMAGE_EXTENSIONS = [ ".pkg", ".ova", ".dmg", ".iso", ".exe" ]
 MOVIE_EXTENSIONS = [ ".mp2", ".MP2", ".mp4", ".MP4", ".mov", ".MOV", ".mpg", ".MPG"]
 FOLDERS = [
-    "/volumes/myArchive/Bilder"
-]
+    'C:\\Users\\mart\\Pictures\\2019'
+] # /volumes/myArchive/Bilder
+DURATION = '- Duration: '
+LEN_DURATION = len(DURATION)
 
 def is_movie(file_path):
     """
@@ -27,13 +29,28 @@ def is_movie(file_path):
 def get_movie_duration(file_path):
     """
         get the duration of the movie in seconds
+        two methodes are feasible:
+        1. use hachoir package
+        2. use ExifTool with subprocess
     """
-    if is_movie(file_path):
-        f = io.open(file_path, 'rb')
-        tags = exifread.process_file(f)
-        f.close()
+    parser = createParser(file_path)
+    if parser:
+        with parser:
+            try:
+                metadata = extractMetadata(parser)
+            except Exception as error:
+                metadata = 'metadata extraction error (1)'
         pass
-    return 0 # not a movie
+        for line in metadata.exportPlaintext():
+            if DURATION in line:
+                return line[LEN_DURATION:]
+            pass
+        pass
+        metadata = 'metadata extraction error (2)'
+    else:
+        metadata = 'unable to parse file'
+    #
+    return metadata
 
 def is_software_image(file_path):
     """
@@ -47,33 +64,48 @@ def is_software_image(file_path):
     else:
         return False
 
+def get_duration(file_path):
+    """
+        get duration (of movie)
+    """
+    if is_movie(file_path):
+        return get_movie_duration(file_path)
+    else:
+        return None
+
 def get_candidates(folders):
     """ get a list with filenames and path """
-    candidates = []
-    total_size = 0 # MBytes
-    for file_path in folders:
-        print("Please wait, analyzing", file_path)
-        if os.path.isfile(file_path):
-            size = os.path.getsize(file_path)
-            if size > MAX_SIZE:
-                size = round(size/1024/1024,1) # MBytes
-                candidates.append((file_path, size))
-                total_size += size
-            pass
-        elif os.path.isdir(file_path):
-            for subdir, dirs, files in os.walk(file_path):
-                for file in files:
-                    size = os.path.getsize(os.path.join(subdir, file))
-                    if size > MAX_SIZE:
-                        size = round(size / 1024 / 1024, 1)  # MBytes
-                        candidates.append((os.path.join(subdir, file), size))
-                        total_size += size
+    try:
+        candidates = []
+        total_size = 0 # MBytes
+        file_path = ""
+        for folder in folders:
+            print("Please wait, analyzing", folder)
+            if os.path.isfile(folder):
+                size = os.path.getsize(folder)
+                if size > MAX_SIZE:
+                    size = round(size/1024/1024,1) # MBytes
+                    candidates.append((folder, size, get_duration(folder)))
+                    total_size += size
+                pass
+            elif os.path.isdir(folder):
+                for subdir, dirs, files in os.walk(folder):
+                    for file in files:
+                        file_path = os.path.join(subdir, file)
+                        size = os.path.getsize(file_path)
+                        if size > MAX_SIZE:
+                            size = round(size / 1024 / 1024, 1)  # MBytes
+                            candidates.append((file_path, size, get_duration(file_path)))
+                            total_size += size
+                        pass
                     pass
                 pass
-            pass
-        else:
-            print("Invalid path:", file_path)
-    return candidates, total_size
+            else:
+                print("Invalid path:", file_path)
+        return candidates, total_size
+    except Exception as error:
+        print("Exception occured:", error)
+    pass
 
 def run():
     """ main code """
@@ -83,7 +115,7 @@ def run():
 
     print("List of candidates:")
     for candidate in candidates:
-        print(str(candidate[1]), "MBytes", candidate[0])
+        print(str(candidate[1]), "MBytes -", candidate[0], "- duration", candidate[2])
 
     image_size = 0.0
     print("List of Software Images:")
